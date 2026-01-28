@@ -43,8 +43,8 @@ class Maze:
             nx, ny = x + dx, y + dy
             next_pos = (nx, ny)
 
-        if self.in_bounds(next_pos) and self.is_open(next_pos):
-            results.append(next_pos)
+            if self.in_bounds(next_pos) and self.is_open(next_pos):
+                results.append(next_pos)
 
         return results
 
@@ -102,7 +102,7 @@ class Maze:
 
         print()
 
-    
+
 
 
 
