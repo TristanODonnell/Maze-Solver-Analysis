@@ -9,6 +9,7 @@ from time import perf_counter
 from typing import Callable, List, Tuple, Any
 
 from src.maze import coord, Maze
+from src.solution import Solution
 from src import runner
 
 
@@ -140,11 +141,22 @@ def get_solver_name(solver: Callable) -> str:
 
 
 def normalize_solver_output(raw: Any) -> Tuple[List[coord] | None, int, str | None]:
-    # None => unsolved
+    # Case 1: None
     if raw is None:
         return None, 0, "returned None"
 
-    # tuple/list forms
+    # Case 2: Solution object (THIS IS YOUR MAIN CASE)
+    if isinstance(raw, Solution):
+        if not raw.found:
+            return None, raw.expanded_count, "not found"
+
+        return (
+            raw.path,
+            raw.expanded_count,
+            None,
+        )
+
+    # Case 3: tuple/list fallback (still supported)
     if isinstance(raw, (tuple, list)):
         if len(raw) == 0:
             return None, 0, "empty return"
@@ -152,10 +164,9 @@ def normalize_solver_output(raw: Any) -> Tuple[List[coord] | None, int, str | No
             return raw[0], 0, None
         if len(raw) == 2:
             return raw[0], int(raw[1]), None
-        # len >= 3
         return raw[0], int(raw[1]), str(raw[2]) if raw[2] is not None else None
 
-    # otherwise treat as path
+    # Case 4: assume raw is already a path
     return raw, 0, None
 
 

@@ -1,0 +1,19 @@
+run_id,width,height,family,seed_value,density,maze_hash,solver_name,solved,path_length,expanded_nodes,runtime_ms,is_best,best_reason
+A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_bfs,True,29,225,0.7341000018641353,True,best by solved > path_length > runtime_ms
+A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_dfs,True,113,113,0.4085999680683017,False,
+A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_astar,True,29,225,1.9351000664755702,False,
+A_15x15_seed1_densNone_r1,15,15,A,1,,a7157b3a87d84e77,solve_bfs,True,29,225,1.142999972216785,False,
+A_15x15_seed1_densNone_r1,15,15,A,1,,a7157b3a87d84e77,solve_dfs,True,113,113,0.38059998769313097,False,
+A_15x15_seed1_densNone_r1,15,15,A,1,,a7157b3a87d84e77,solve_astar,True,29,225,0.9880999568849802,True,best by solved > path_length > runtime_ms
+A_15x15_seed1_densNone_r2,15,15,A,1,,a7157b3a87d84e77,solve_bfs,True,29,225,1.421299995854497,True,best by solved > path_length > runtime_ms
+A_15x15_seed1_densNone_r2,15,15,A,1,,a7157b3a87d84e77,solve_dfs,True,113,113,0.8958000689744949,False,
+A_15x15_seed1_densNone_r2,15,15,A,1,,a7157b3a87d84e77,solve_astar,True,29,225,1.8450000789016485,False,
+B_31x31_seed42_dens0.35_r0,31,31,B,42,0.35,923144adf14fb0de,solve_bfs,True,61,333,1.3062999350950122,True,best by solved > path_length > runtime_ms
+B_31x31_seed42_dens0.35_r0,31,31,B,42,0.35,923144adf14fb0de,solve_dfs,True,121,158,0.5381000228226185,False,
+B_31x31_seed42_dens0.35_r0,31,31,B,42,0.35,923144adf14fb0de,solve_astar,True,61,255,1.4163999585434794,False,
+B_31x31_seed42_dens0.35_r1,31,31,B,42,0.35,923144adf14fb0de,solve_bfs,True,61,333,1.0402000043541193,True,best by solved > path_length > runtime_ms
+B_31x31_seed42_dens0.35_r1,31,31,B,42,0.35,923144adf14fb0de,solve_dfs,True,121,158,0.5209000082686543,False,
+B_31x31_seed42_dens0.35_r1,31,31,B,42,0.35,923144adf14fb0de,solve_astar,True,61,255,2.2721000714227557,False,
+B_31x31_seed42_dens0.35_r2,31,31,B,42,0.35,923144adf14fb0de,solve_bfs,True,61,333,1.0266000172123313,True,best by solved > path_length > runtime_ms
+B_31x31_seed42_dens0.35_r2,31,31,B,42,0.35,923144adf14fb0de,solve_dfs,True,121,158,0.5356000037863851,False,
+B_31x31_seed42_dens0.35_r2,31,31,B,42,0.35,923144adf14fb0de,solve_astar,True,61,255,1.9986999686807394,False,
