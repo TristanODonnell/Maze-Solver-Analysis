@@ -3,7 +3,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
-from src.maze import Maze, OPEN, WALL
+from src.maze import Maze, OPEN, WALL, DIRECTIONS
 
 @dataclass(frozen=True)
 class MazeFeatures:
@@ -11,6 +11,8 @@ class MazeFeatures:
     open_cells: int
     wall_cells: int
     open_ratio: float
+    dead_ends: int
+    dead_end_ratio: float
 
 
 
@@ -34,11 +36,46 @@ def analyze_maze(maze: Maze)-> MazeFeatures:
     open_ratio = open_cells / cells_total
 
 
+    dead_ends = 0
+
+    for y in range(0, maze.height - 1):
+        for x in range(0, maze.width - 1):
+
+            if maze.grid[y][x] != OPEN:
+                continue
+
+            open_neighbor_count = 0
+
+            for (dx, dy) in DIRECTIONS:
+                nx = x + dx
+                ny = y + dy
+
+                if maze.in_bounds((nx, ny)):
+                    continue
+
+                if maze.grid[ny][nx] == OPEN:
+                    open_neighbor_count += 1
+
+            if open_neighbor_count == 1:
+                dead_ends += 1
+
+
+    if open_cells == 0:
+        dead_end_ratio = 0.0
+    else:
+        dead_end_ratio = dead_ends/open_cells
+
+
+
+
+
     return MazeFeatures(
         cells_total=cells_total,
         open_cells=open_cells,
         wall_cells=wall_cells,
         open_ratio=open_ratio,
+        dead_ends=dead_ends,
+        dead_end_ratio=dead_end_ratio
     )
 
 def validate_features(f: MazeFeatures) -> List[str]:
@@ -56,6 +93,15 @@ def validate_features(f: MazeFeatures) -> List[str]:
         warnings.append(
             "open_ratio outside [0, 1]"
         )
+
+    if f.dead_ends < 0:
+        warnings.append("dead_ends < 0 (impossible)")
+
+    if f.dead_ends > f.open_cells:
+        warnings.append("dead_ends > open_cells (impossible)")
+
+    if f.dead_end_ratio < 0 or f.dead_end_ratio > 1:
+        warnings.append("dead_end_ratio outside [0, 1]")
 
     return warnings
 
