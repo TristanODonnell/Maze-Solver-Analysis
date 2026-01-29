@@ -78,9 +78,8 @@ class Maze:
     def is_goal(self, pos: coord) -> bool:
         return pos == self.end
 
-    def display(self, path: set[coord] | None = None) -> None:
-        if path is None:
-            path = set()
+    def display(self, path: set[coord] | list[coord] | None = None) -> None:
+        path_set = set(path) if path is not None else set()
 
         for y in range(self.height) :
             row_chars = []
@@ -91,7 +90,7 @@ class Maze:
                     row_chars.append("S")
                 elif pos == self.end:
                     row_chars.append("E")
-                elif pos in path:
+                elif pos in path_set:
                     row_chars.append("*")
                 elif self.grid[y][x] == WALL:
                     row_chars.append("#")
