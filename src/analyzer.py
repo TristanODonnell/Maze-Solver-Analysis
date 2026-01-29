@@ -16,6 +16,7 @@ class MazeFeatures:
 
 
 
+
 def analyze_maze(maze: Maze)-> MazeFeatures:
     maze.validate()
 
@@ -38,8 +39,8 @@ def analyze_maze(maze: Maze)-> MazeFeatures:
 
     dead_ends = 0
 
-    for y in range(0, maze.height - 1):
-        for x in range(0, maze.width - 1):
+    for y in range(maze.height):
+        for x in range(maze.width):
 
             if maze.grid[y][x] != OPEN:
                 continue
@@ -50,7 +51,7 @@ def analyze_maze(maze: Maze)-> MazeFeatures:
                 nx = x + dx
                 ny = y + dy
 
-                if maze.in_bounds((nx, ny)):
+                if not maze.in_bounds((nx, ny)):
                     continue
 
                 if maze.grid[ny][nx] == OPEN:
@@ -104,6 +105,27 @@ def validate_features(f: MazeFeatures) -> List[str]:
         warnings.append("dead_end_ratio outside [0, 1]")
 
     return warnings
+
+def print_features(f: MazeFeatures, warnings: List[str] ) -> None:
+    print(
+        f"cells_total: {f.cells_total}, "
+        f"open_cells: {f.open_cells}, "
+        f"wall_cells: {f.wall_cells}, "
+        f"open_ratio: {f.open_ratio:.3f}"
+    )
+    print()
+    print(
+        f"dead_ends: {f.dead_ends}, "
+        f"dead_end_ratio: {f.dead_end_ratio:.3f}"
+    )
+
+    for w in warnings:
+        print(w)
+        print()
+
+
+
+
 
 
 
