@@ -5,6 +5,7 @@ from src.rng import rng as prng
 from collections import deque
 from typing import List
 
+
 import numpy as np
 
 def manhattan_distance_numpy(point1, point2):
@@ -79,16 +80,15 @@ def generate_perfect(grid: List[List[int]], start: maze.coord ) -> List[List[int
 
     return grid
 
-def generate_dense_solvable(grid, start, end, density) -> List[List[int]]:
+def generate_dense_solvable(grid, start, end, open_ratio_target) -> List[List[int]]:
 
     #clamps
-    if density < 0.0:
-        density = 0.0
-    if density > 1.0:
-        density = 1.0
+    if open_ratio_target < 0.0:
+        open_ratio_target = 0.0
+    if open_ratio_target > 1.0:
+        open_ratio_target = 1.0
 
-
-    target_open = int(density * (get_width(grid) * get_height(grid)))
+    target_open = int(open_ratio_target * (get_width(grid) * get_height(grid)))
     
     path_cells = carve_path_start_to_end(grid, start, end)
     for cell in path_cells:
@@ -113,7 +113,7 @@ def generate_dense_solvable(grid, start, end, density) -> List[List[int]]:
 
     if not is_solvable(grid, start, end):
         fresh = create_grid(get_width(grid), get_height(grid))
-        return generate_dense_solvable(fresh, start, end, density)
+        return generate_dense_solvable(fresh, start, end, open_ratio_target)
 
     return grid
 
