@@ -43,40 +43,63 @@ def create_maze(grid, start, end) -> maze.Maze:
     return created
 
 #perfect maze
-def generate_perfect(grid: List[List[int]], start: maze.coord ) -> List[List[int]]:
+def generate_perfect(grid: List[List[int]], start: maze.coord) -> List[List[int]]:
 
-    visited = set()
-    active = deque()
+    width = get_width(grid)
+    height = get_height(grid)
 
-    visited.add(start)
-    active.append(start)
+    def is_cell(pos):
+        x, y = pos
+        return (
+            0 < x < width - 1
+            and 0 < y < height - 1
+            and x % 2 == 1
+            and y % 2 == 1
+        )
 
-    while active:
-        current = active[-1]
-        (x, y) = current
-        neighbors = []
-
+    def neighbors_2_steps(pos):
+        x, y = pos
+        results = []
         for dx, dy in maze.DIRECTIONS:
-            nx, ny = x + dx, y + dy
-            neighbor = (nx, ny)
+            nx, ny = x + 2 * dx, y + 2 * dy
+            if is_cell((nx, ny)):
+                results.append((nx, ny))
+        return results
 
-            if  (
-                in_bounds(grid, neighbor)
-                and neighbor not in visited
-                and grid[ny][nx] == maze.WALL
-            ):
-                neighbors.append(neighbor)
+    # pick nearest odd cell to start
+    sx, sy = start
+    start_cell = (
+        sx if sx % 2 == 1 else max(1, sx - 1),
+        sy if sy % 2 == 1 else max(1, sy - 1),
+    )
 
-        if not neighbors:
-            active.pop()
+    stack = [start_cell]
+    visited = {start_cell}
+
+    grid[start_cell[1]][start_cell[0]] = maze.OPEN
+
+    while stack:
+        cx, cy = stack[-1]
+
+        unvisited = [
+            n for n in neighbors_2_steps((cx, cy))
+            if n not in visited
+        ]
+
+        if not unvisited:
+            stack.pop()
             continue
 
-        neighbor = prng.choice(neighbors)
-        nx, ny = neighbor
+        nx, ny = prng.choice(unvisited)
 
+        # carve wall between cells
+        wx = (cx + nx) // 2
+        wy = (cy + ny) // 2
+        grid[wy][wx] = maze.OPEN
         grid[ny][nx] = maze.OPEN
-        visited.add(neighbor)
-        active.append(neighbor)
+
+        visited.add((nx, ny))
+        stack.append((nx, ny))
 
     return grid
 
