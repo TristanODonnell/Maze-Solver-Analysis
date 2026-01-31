@@ -42,8 +42,10 @@ def create_maze(grid, start, end) -> maze.Maze:
     created.validate()
     return created
 
-#perfect maze
-def generate_perfect(grid: List[List[int]], start: maze.coord) -> List[List[int]]:
+# perfect maze
+def generate_perfect(grid: List[List[int]], start: maze.coord, end: maze.coord) -> List[List[int]]:
+    start_cell = snap_to_odd_interior(grid, start)
+    end_cell   = snap_to_odd_interior(grid, end)
 
     width = get_width(grid)
     height = get_height(grid)
@@ -66,13 +68,6 @@ def generate_perfect(grid: List[List[int]], start: maze.coord) -> List[List[int]
                 results.append((nx, ny))
         return results
 
-    # pick nearest odd cell to start
-    sx, sy = start
-    start_cell = (
-        sx if sx % 2 == 1 else max(1, sx - 1),
-        sy if sy % 2 == 1 else max(1, sy - 1),
-    )
-
     stack = [start_cell]
     visited = {start_cell}
 
@@ -81,11 +76,7 @@ def generate_perfect(grid: List[List[int]], start: maze.coord) -> List[List[int]
     while stack:
         cx, cy = stack[-1]
 
-        unvisited = [
-            n for n in neighbors_2_steps((cx, cy))
-            if n not in visited
-        ]
-
+        unvisited = [n for n in neighbors_2_steps((cx, cy)) if n not in visited]
         if not unvisited:
             stack.pop()
             continue
@@ -101,17 +92,21 @@ def generate_perfect(grid: List[List[int]], start: maze.coord) -> List[List[int]
         visited.add((nx, ny))
         stack.append((nx, ny))
 
+    # ensure end is open on a real cell coordinate (connected in perfect-maze space)
+    ex, ey = end_cell
+    grid[ey][ex] = maze.OPEN
+
     return grid
 
-def generate_dense_solvable(grid, start, end, open_ratio_target) -> List[List[int]]:
+def generate_dense_solvable(grid, start, end, open_ratio: float) -> List[List[int]]:
 
     #clamps
-    if open_ratio_target < 0.0:
-        open_ratio_target = 0.0
-    if open_ratio_target > 1.0:
-        open_ratio_target = 1.0
+    if open_ratio< 0.0:
+        open_ratio = 0.0
+    if open_ratio > 1.0:
+        open_ratio = 1.0
 
-    target_open = int(open_ratio_target * (get_width(grid) * get_height(grid)))
+    target_open = int(open_ratio * (get_width(grid) * get_height(grid)))
     
     path_cells = carve_path_start_to_end(grid, start, end)
     for cell in path_cells:
@@ -136,7 +131,7 @@ def generate_dense_solvable(grid, start, end, open_ratio_target) -> List[List[in
 
     if not is_solvable(grid, start, end):
         fresh = create_grid(get_width(grid), get_height(grid))
-        return generate_dense_solvable(fresh, start, end, open_ratio_target)
+        return generate_dense_solvable(fresh, start, end, open_ratio)
 
     return grid
 
@@ -240,7 +235,22 @@ def in_bounds(grid, pos) -> bool:
 def get_height(grid) -> int: return len(grid)
 def get_width(grid) -> int: return len(grid[0])
 
+def snap_to_odd_interior(grid, pos: tuple[int, int]) -> tuple[int, int]:
+    w = get_width(grid)
+    h = get_height(grid)
+    x, y = pos
 
+    # clamp to interior (avoid boundary walls)
+    x = min(max(1, x), w - 2)
+    y = min(max(1, y), h - 2)
+
+    # force odd coordinates (cell centers)
+    if x % 2 == 0:
+        x = x - 1 if x > 1 else x + 1
+    if y % 2 == 0:
+        y = y - 1 if y > 1 else y + 1
+
+    return x, y
 
 
 

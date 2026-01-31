@@ -16,7 +16,7 @@ class MazeMeta:
     family: str   # "A" or "B"
     width: int
     height: int
-    density: Optional[float] = None
+    open_ratio: Optional[float] = None
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class SolverRunMetrics:
     family: str
     width: int
     height: int
-    density: Optional[float]
+    open_ratio: Optional[float]
 
     # --- solver identity ---
     solver_name: str   # "BFS" | "DFS" | "ASTAR"
@@ -61,7 +61,7 @@ def run_solver_with_metrics(
         family=meta.family,
         width=meta.width,
         height=meta.height,
-        density=meta.density,
+        open_ratio=meta.open_ratio,
         solver_name=solver_name,
         solved=sol.found,
         path_length=sol.path_length,

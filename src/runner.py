@@ -11,7 +11,7 @@ def run(width: int,
         height: int,
         family: str,
         seed_value: int | None = None,
-        density: float | None = None,
+        open_ratio: float | None = None,
         *,
         verbose: bool = True,
     ) -> maze.Maze:
@@ -32,25 +32,29 @@ def run(width: int,
     end = (width - 1, height - 1)
 
     if family == "A":
-        generators.generate_perfect(built_grid, start)
+        # critical: make Maze endpoints match the perfect-maze cell lattice
+        start = generators.snap_to_odd_interior(built_grid, start)
+        end = generators.snap_to_odd_interior(built_grid, end)
+
+        generators.generate_perfect(built_grid, start, end)
     elif family == "B":
-        if density is None:
-             raise ValueError("Family B requires density (e.g., 0.25).")
-        if not (0.0 <= density <= 1.0):
-            raise ValueError(f"density must be in [0.0, 1.0], got {density}")
+        if open_ratio is None:
+             raise ValueError("Family B requires open_ratio (e.g., 0.25).")
+        if not (0.0 <= open_ratio <= 1.0):
+            raise ValueError(f"open_ratio must be in [0.0, 1.0], got {open_ratio}")
 
         generators.generate_dense_solvable(
             grid=built_grid,
             start=start,
             end=end,
-            density=density,
+            open_ratio=open_ratio,
         )
     maze_created = generators.create_maze(built_grid, start, end)
 
     if verbose:
         print(
             f"[run] family={family} width={width} height={height} "
-            f"seed={seed_value} density={density}"
+            f"seed={seed_value} open_ratio={open_ratio}"
         )
         maze_created.display()
 

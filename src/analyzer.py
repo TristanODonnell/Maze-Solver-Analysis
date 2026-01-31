@@ -1,6 +1,7 @@
 # analyzer.py
 
 from __future__ import annotations
+import copy
 from collections import deque
 from dataclasses import dataclass
 from typing import List
@@ -99,7 +100,7 @@ def analyze_maze(maze: Maze)-> MazeFeatures:
         dead_end_ratio = dead_ends/open_cells
 
     #Shortest Path
-    bfs_solution = solve_bfs(maze)
+    bfs_solution = solve_bfs(copy.deepcopy(maze))
     if bfs_solution.found:
         shortest_path_length = bfs_solution.path_length
     else:

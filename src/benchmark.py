@@ -31,7 +31,7 @@ class BenchmarkRow:
     height: int
     family: str
     seed_value: int | None
-    density: float | None
+    open_ratio: float | None
     maze_hash: str
     solver_name: str
     solved: bool
@@ -74,7 +74,7 @@ def benchmark(
                     height=cfg["height"],
                     family=cfg["family"],
                     seed_value=cfg.get("seed_value"),
-                    density=cfg.get("density"),
+                    open_ratio=cfg.get("open_ratio"),
                     maze_hash=mh,
                     solver_name=result.solver_name,
                     solved=result.solved,
@@ -104,7 +104,7 @@ def make_run_id(cfg: dict, repeat_index: int) -> str:
     h = cfg["height"]
     fam = cfg["family"]
     seed = cfg.get("seed_value")
-    dens = cfg.get("density")
+    dens = cfg.get("open_ratio")
     return f"{fam}_{w}x{h}_seed{seed}_dens{dens}_r{repeat_index}"
 
 

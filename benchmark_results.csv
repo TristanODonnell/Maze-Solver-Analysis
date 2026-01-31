@@ -1,4 +1,4 @@
-run_id,width,height,family,seed_value,density,maze_hash,solver_name,solved,path_length,expanded_nodes,runtime_ms,is_best,best_reason
+run_id,width,height,family,seed_value,open_ratio,maze_hash,solver_name,solved,path_length,expanded_nodes,runtime_ms,is_best,best_reason
 A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_bfs,True,29,225,0.7341000018641353,True,best by solved > path_length > runtime_ms
 A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_dfs,True,113,113,0.4085999680683017,False,
 A_15x15_seed1_densNone_r0,15,15,A,1,,a7157b3a87d84e77,solve_astar,True,29,225,1.9351000664755702,False,

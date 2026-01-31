@@ -2,41 +2,19 @@
 
 from src.analyzer import MazeFeatures
 
-"""
-Rules:
-Rule 1 (Tiny maze):
-If width * height <= 225 → DFS
-
-Rule 2 (Low reachability):
-If reachable_ratio < 0.90 → BFS
-
-Rule 3 (Open + low dead ends):
-If open_ratio >= 0.40 AND dead_end_ratio <= 0.15 → ASTAR
-
-Rule 4 (Very dead-end heavy):
-If dead_end_ratio >= 0.35 → BFS
-
-Default:
-ASTAR
-"""
 
 def select_solver_heuristic(f: MazeFeatures) -> str:
-
-    # Rule 1: Tiny maze → DFS (contrast)
+    # tiny mazes: DFS is fine
     if f.cells_total <= 225:
         return "DFS"
 
-    # Rule 2: Very low reachability → BFS
-    if f.reachable_ratio < 0.90:
+    # very open mazes (often perfect-maze-like corridors): DFS tends to expand less
+    if f.open_ratio >= 0.35:
+        return "DFS"
+
+    # if lots of dead ends, BFS can be safer (more systematic)
+    if f.dead_end_ratio >= 0.20:
         return "BFS"
 
-    # Rule 3: Moderately open + low dead ends → A*
-    if f.open_ratio >= 0.40 and f.dead_end_ratio <= 0.15:
-        return "ASTAR"
-
-    # Rule 4: Very dead-end heavy → BFS
-    if f.dead_end_ratio >= 0.35:
-        return "BFS"
-
-    # Default
+    # otherwise pick A*
     return "ASTAR"
